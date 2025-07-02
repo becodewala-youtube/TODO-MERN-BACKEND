@@ -14,8 +14,15 @@ const port = process.env.PORT || 5000;
 connectDB();
 
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
-  credentials: true,
+  origin: (origin, callback) => {
+    const allowedOrigins = ['http://localhost:5173','https://todo-mern-frontend-eta.vercel.app',]; 
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);  // Allow the request
+    } else {
+      callback(new Error('Not allowed by CORS'));  // Reject the request
+    }
+  },
+  credentials: true,  // Allow cookies to be sent
 }));
 
 app.use(express.json());
